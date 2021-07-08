@@ -66,8 +66,8 @@ void loop() {
   else
   {
     Serial.print("RUNNING On\n");
-    analogWrite(RUNNING_LIGHTS_LED_LEFT, 142);
-    analogWrite(RUNNING_LIGHTS_LED_RIGHT, 142);
+    analogWrite(RUNNING_LIGHTS_LED_LEFT, get_percentage(255, 30));
+    analogWrite(RUNNING_LIGHTS_LED_RIGHT, get_percentage(255, 30));
   }
 
   if (emergence_switch_state == LOW)
@@ -83,12 +83,14 @@ void loop() {
   {
     if (turning_input_value == RIGHT_TURN_STATE)
     {
+      digitalWrite(TURN_SIGNAL_LED_LEFT, HIGH);
       digitalWrite(TURN_SIGNAL_LED_RIGHT, HIGH);
       delay(300);
       digitalWrite(TURN_SIGNAL_LED_RIGHT, LOW);
     }
     else if (turning_input_value == LEFT_TURN_STATE)
     {
+      digitalWrite(TURN_SIGNAL_LED_RIGHT, HIGH);
       digitalWrite(TURN_SIGNAL_LED_LEFT, HIGH);
       delay(300);
       digitalWrite(TURN_SIGNAL_LED_LEFT, LOW);
