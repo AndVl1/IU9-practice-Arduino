@@ -17,6 +17,9 @@ const int BUTTON_PRESSED_STATE = 1;
 const int RIGHT_TURN_STATE = 0;
 const int LEFT_TURN_STATE = 1023;
 
+const int ANALOG_READ_MIN = 0;
+const int ANALOG_READ_MAX = 1023;
+
 int run_l_switch_state = 0;
 int emergence_switch_state = 0;
 int stop_input_value = 0;
@@ -43,7 +46,16 @@ void loop() {
   turning_input_value = analogRead(TURN_LIGHTS_PIN_INDEX);
   Serial.print(turning_input_value);
 
-  analogWrite(STOP_LED, stop_input_value / 4);
+  if (get_percentage(1023, 30) < stop_input_value) 
+  {
+    analogWrite(STOP_LED, 0);
+  }
+  else 
+  {
+    analogWrite(STOP_LED, 255);
+  }
+
+//  analogWrite(STOP_LED, stop_input_value / 4);
 
   if (run_l_switch_state == LOW)
   {
@@ -90,4 +102,9 @@ void loop() {
 
 
   delay(500);
+}
+
+int get_percentage(int value, int percentage)
+{
+  return value * percentage / 100;
 }
