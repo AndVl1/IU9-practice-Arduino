@@ -113,7 +113,6 @@ void loop() {
       {
         emergence_state = OFF;
       }
-      Serial.println(emergence_state);
     }
     digitalWrite(TURN_SIGNAL_LED_LEFT, emergence_state);
     digitalWrite(TURN_SIGNAL_LED_RIGHT, emergence_state);
@@ -160,6 +159,9 @@ void loop() {
         default:
           digitalWrite(TURN_SIGNAL_LED_LEFT, HIGH);
           digitalWrite(TURN_SIGNAL_LED_RIGHT, HIGH);
+          emergence_state = OFF;
+          turn_right_state = OFF;
+          turn_left_state = OFF;
           break;
       }
     }
