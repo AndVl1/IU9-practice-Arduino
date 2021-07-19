@@ -50,6 +50,14 @@ void setup() {
   pinMode(RUNNING_LIGHTS_SWITCH_PIN_INDEX, INPUT_PULLUP);
   pinMode(EMERGENCE_SWITCH_PIN_INDEX, INPUT_PULLUP);
 
+  pinMode(RIGHT_TURN_SWITCH_INDEX, INPUT_PULLUP);
+  pinMode(LEFT_TURN_SWITCH_INDEX, INPUT_PULLUP);
+
+  pinMode(ANALOG_INPUT_PIN_INDEX, INPUT);
+  
+  pinMode(TURN_SIGNAL_LED_RIGHT, OUTPUT);
+  pinMode(TURN_SIGNAL_LED_LEFT, OUTPUT);
+
   bcm_initialize();
 
 
@@ -64,14 +72,18 @@ void loop() {
     // inputs
     bcm_U.running_switch = digitalRead(RUNNING_LIGHTS_SWITCH_PIN_INDEX);
     bcm_U.emergence_switch1 = digitalRead(EMERGENCE_SWITCH_PIN_INDEX);
+    bcm_U.turn_left_switch = digitalRead(LEFT_TURN_SWITCH_INDEX);
+    bcm_U.turn_right_switch = digitalRead(RIGHT_TURN_SWITCH_INDEX);
+    bcm_U.stop_signal_input = analogRead(ANALOG_INPUT_PIN_INDEX);
     
     bcm_step();
 
     analogWrite(RUNNING_LIGHTS_LED_LEFT, bcm_Y.running_LED_1);
     analogWrite(RUNNING_LIGHTS_LED_RIGHT, bcm_Y.running_LED_2);
+    digitalWrite(STOP_LED, bcm_Y.stop_LED);
 
-    digitalWrite(TURN_SIGNAL_LED_LEFT, bcm_Y.emegrence_LED_2);
-    digitalWrite(TURN_SIGNAL_LED_RIGHT, bcm_Y.emergence_LED_1);
+    digitalWrite(TURN_SIGNAL_LED_LEFT, bcm_Y.turning_LED_2);
+    digitalWrite(TURN_SIGNAL_LED_RIGHT, bcm_Y.turning_LED_1);
   }
 }
 
