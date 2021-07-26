@@ -11,7 +11,7 @@
 #define TURN_SIGNAL_LED_LEFT 12
 #define TURN_SIGNAL_LED_RIGHT 8
 
-#define STOP_LED 11
+#define STOP_LED 7
 
 #define RIGHT_TURN_SWITCH_INDEX 2
 #define LEFT_TURN_SWITCH_INDEX 3
@@ -58,6 +58,8 @@ void setup() {
   pinMode(TURN_SIGNAL_LED_RIGHT, OUTPUT);
   pinMode(TURN_SIGNAL_LED_LEFT, OUTPUT);
 
+  pinMode(STOP_LED, OUTPUT);
+
   bcm_initialize();
 
 
@@ -70,13 +72,15 @@ void loop() {
   {
     timer_10ms_event = 0;
     // inputs
-    bcm_U.running_switch = digitalRead(RUNNING_LIGHTS_SWITCH_PIN_INDEX);
-    bcm_U.emergence_switch1 = digitalRead(EMERGENCE_SWITCH_PIN_INDEX);
-    bcm_U.turn_left_switch = digitalRead(LEFT_TURN_SWITCH_INDEX);
-    bcm_U.turn_right_switch = digitalRead(RIGHT_TURN_SWITCH_INDEX);
+    bcm_U.running_switch = !digitalRead(RUNNING_LIGHTS_SWITCH_PIN_INDEX);
+    bcm_U.emergence_switch1 = !digitalRead(EMERGENCE_SWITCH_PIN_INDEX);
+    bcm_U.turn_left_switch = !digitalRead(LEFT_TURN_SWITCH_INDEX);
+    bcm_U.turn_right_switch = !digitalRead(RIGHT_TURN_SWITCH_INDEX);
     bcm_U.stop_signal_input = analogRead(ANALOG_INPUT_PIN_INDEX);
     
     bcm_step();
+
+    Serial.println(bcm_Y.stop_LED);
 
     analogWrite(RUNNING_LIGHTS_LED_LEFT, bcm_Y.running_LED_1);
     analogWrite(RUNNING_LIGHTS_LED_RIGHT, bcm_Y.running_LED_2);

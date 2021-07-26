@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.1
+ * Model version                  : 7.27
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Mon Jul 19 03:53:37 2021
+ * C/C++ source code generated on : Mon Jul 26 03:17:42 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -36,17 +36,14 @@
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_bcm_T RT_MODEL_bcm_T;
 
-/* Block states (default storage) for system '<S1>/Chart' */
-typedef struct {
-  uint8_T is_active_c3_bcm;            /* '<S1>/Chart' */
-  uint8_T is_c3_bcm;                   /* '<S1>/Chart' */
-  uint8_T temporalCounter_i1;          /* '<S1>/Chart' */
-} DW_Chart_bcm_T;
-
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  DW_Chart_bcm_T sf_Chart_f;           /* '<S2>/Chart' */
-  DW_Chart_bcm_T sf_Chart;             /* '<S1>/Chart' */
+  uint8_T is_active_c1_bcm;            /* '<S2>/Chart' */
+  uint8_T is_c1_bcm;                   /* '<S2>/Chart' */
+  uint8_T temporalCounter_i1;          /* '<S2>/Chart' */
+  uint8_T is_active_c3_bcm;            /* '<S1>/Chart' */
+  uint8_T is_c3_bcm;                   /* '<S1>/Chart' */
+  uint8_T temporalCounter_i1_j;        /* '<S1>/Chart' */
 } DW_bcm_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -88,6 +85,12 @@ extern void bcm_terminate(void);
 
 /* Real-time Model object */
 extern RT_MODEL_bcm_T *const bcm_M;
+
+/*-
+ * These blocks were eliminated from the model due to optimizations:
+ *
+ * Block '<Root>/Constant5' : Unused code path elimination
+ */
 
 /*-
  * The generated code includes comments that allow you to trace directly

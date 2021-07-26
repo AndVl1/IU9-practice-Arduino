@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.1
+ * Model version                  : 7.27
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Mon Jul 19 03:53:37 2021
+ * C/C++ source code generated on : Mon Jul 26 03:17:42 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -32,59 +32,6 @@ ExtY_bcm_T bcm_Y;
 /* Real-time model */
 static RT_MODEL_bcm_T bcm_M_;
 RT_MODEL_bcm_T *const bcm_M = &bcm_M_;
-static void bcm_Chart_Init(DW_Chart_bcm_T *localDW);
-static void bcm_Chart(boolean_T rtu_EmergencySwitch, uint8_T *rty_PulseOutput,
-                      DW_Chart_bcm_T *localDW);
-
-/*
- * System initialize for atomic system:
- *    '<S1>/Chart'
- *    '<S2>/Chart'
- */
-static void bcm_Chart_Init(DW_Chart_bcm_T *localDW)
-{
-  localDW->temporalCounter_i1 = 0U;
-  localDW->is_active_c3_bcm = 0U;
-  localDW->is_c3_bcm = bcm_IN_NO_ACTIVE_CHILD;
-}
-
-/*
- * Output and update for atomic system:
- *    '<S1>/Chart'
- *    '<S2>/Chart'
- */
-static void bcm_Chart(boolean_T rtu_EmergencySwitch, uint8_T *rty_PulseOutput,
-                      DW_Chart_bcm_T *localDW)
-{
-  if (localDW->temporalCounter_i1 < 63U) {
-    localDW->temporalCounter_i1++;
-  }
-
-  /* Chart: '<S1>/Chart' */
-  if (localDW->is_active_c3_bcm == 0U) {
-    localDW->is_active_c3_bcm = 1U;
-    localDW->is_c3_bcm = bcm_IN_StateHigh;
-    localDW->temporalCounter_i1 = 0U;
-    *rty_PulseOutput = 1U;
-  } else if (localDW->is_c3_bcm == bcm_IN_StateHigh) {
-    *rty_PulseOutput = 1U;
-    if (rtu_EmergencySwitch && (localDW->temporalCounter_i1 >= 50)) {
-      localDW->is_c3_bcm = bcm_IN_StateLow;
-      localDW->temporalCounter_i1 = 0U;
-      *rty_PulseOutput = 0U;
-    }
-  } else {
-    /* case IN_StateLow: */
-    *rty_PulseOutput = 0U;
-    if (localDW->temporalCounter_i1 >= 50) {
-      localDW->is_c3_bcm = bcm_IN_StateHigh;
-      localDW->temporalCounter_i1 = 0U;
-      *rty_PulseOutput = 1U;
-    }
-  }
-
-  /* End of Chart: '<S1>/Chart' */
-}
 
 /* Model step function */
 void bcm_step(void)
@@ -123,8 +70,10 @@ void bcm_step(void)
   /* Outport: '<Root>/running_LED_2' */
   bcm_Y.running_LED_2 = rtb_Switch3;
 
-  /* Outport: '<Root>/stop_LED' */
-  bcm_Y.stop_LED = rtb_Compare;
+  /* Outport: '<Root>/stop_LED' incorporates:
+   *  Logic: '<Root>/Logical Operator2'
+   */
+  bcm_Y.stop_LED = !rtb_Compare;
 
   /* Logic: '<Root>/Logical Operator' incorporates:
    *  Inport: '<Root>/emergence_switch1'
@@ -136,8 +85,33 @@ void bcm_step(void)
    *  EnablePort: '<S1>/Enable'
    */
   /* Chart: '<S1>/Chart' */
-  bcm_Chart(rtb_Compare, &rtb_Switch3, &bcm_DW.sf_Chart);
+  if (bcm_DW.temporalCounter_i1_j < 63U) {
+    bcm_DW.temporalCounter_i1_j++;
+  }
 
+  if (bcm_DW.is_active_c3_bcm == 0U) {
+    bcm_DW.is_active_c3_bcm = 1U;
+    bcm_DW.is_c3_bcm = bcm_IN_StateHigh;
+    bcm_DW.temporalCounter_i1_j = 0U;
+    rtb_Switch3 = 1U;
+  } else if (bcm_DW.is_c3_bcm == bcm_IN_StateHigh) {
+    rtb_Switch3 = 1U;
+    if (rtb_Compare && (bcm_DW.temporalCounter_i1_j >= 50)) {
+      bcm_DW.is_c3_bcm = bcm_IN_StateLow;
+      bcm_DW.temporalCounter_i1_j = 0U;
+      rtb_Switch3 = 0U;
+    }
+  } else {
+    /* case IN_StateLow: */
+    rtb_Switch3 = 0U;
+    if (bcm_DW.temporalCounter_i1_j >= 50) {
+      bcm_DW.is_c3_bcm = bcm_IN_StateHigh;
+      bcm_DW.temporalCounter_i1_j = 0U;
+      rtb_Switch3 = 1U;
+    }
+  }
+
+  /* End of Chart: '<S1>/Chart' */
   /* End of Outputs for SubSystem: '<Root>/Blink_Generator ' */
 
   /* Switch: '<Root>/Switch1' */
@@ -148,7 +122,7 @@ void bcm_step(void)
     /* Outport: '<Root>/turning_LED_1' incorporates:
      *  Constant: '<Root>/Constant3'
      */
-    bcm_Y.turning_LED_1 = MAX_uint8_T;
+    bcm_Y.turning_LED_1 = 1U;
   }
 
   /* End of Switch: '<Root>/Switch1' */
@@ -163,8 +137,33 @@ void bcm_step(void)
    *  EnablePort: '<S2>/Enable'
    */
   /* Chart: '<S2>/Chart' */
-  bcm_Chart(rtb_Compare, &rtb_Switch3, &bcm_DW.sf_Chart_f);
+  if (bcm_DW.temporalCounter_i1 < 63U) {
+    bcm_DW.temporalCounter_i1++;
+  }
 
+  if (bcm_DW.is_active_c1_bcm == 0U) {
+    bcm_DW.is_active_c1_bcm = 1U;
+    bcm_DW.is_c1_bcm = bcm_IN_StateHigh;
+    bcm_DW.temporalCounter_i1 = 0U;
+    rtb_Switch3 = 1U;
+  } else if (bcm_DW.is_c1_bcm == bcm_IN_StateHigh) {
+    rtb_Switch3 = 1U;
+    if (rtb_Compare && (bcm_DW.temporalCounter_i1 >= 50)) {
+      bcm_DW.is_c1_bcm = bcm_IN_StateLow;
+      bcm_DW.temporalCounter_i1 = 0U;
+      rtb_Switch3 = 0U;
+    }
+  } else {
+    /* case IN_StateLow: */
+    rtb_Switch3 = 0U;
+    if (bcm_DW.temporalCounter_i1 >= 50) {
+      bcm_DW.is_c1_bcm = bcm_IN_StateHigh;
+      bcm_DW.temporalCounter_i1 = 0U;
+      rtb_Switch3 = 1U;
+    }
+  }
+
+  /* End of Chart: '<S2>/Chart' */
   /* End of Outputs for SubSystem: '<Root>/Blink_Generator 1' */
 
   /* Switch: '<Root>/Switch3' */
@@ -175,7 +174,7 @@ void bcm_step(void)
     /* Outport: '<Root>/turning_LED_2' incorporates:
      *  Constant: '<Root>/Constant3'
      */
-    bcm_Y.turning_LED_2 = MAX_uint8_T;
+    bcm_Y.turning_LED_2 = 1U;
   }
 
   /* End of Switch: '<Root>/Switch3' */
@@ -201,16 +200,18 @@ void bcm_initialize(void)
                 sizeof(ExtY_bcm_T));
 
   /* SystemInitialize for Enabled SubSystem: '<Root>/Blink_Generator ' */
-
   /* SystemInitialize for Chart: '<S1>/Chart' */
-  bcm_Chart_Init(&bcm_DW.sf_Chart);
+  bcm_DW.temporalCounter_i1_j = 0U;
+  bcm_DW.is_active_c3_bcm = 0U;
+  bcm_DW.is_c3_bcm = bcm_IN_NO_ACTIVE_CHILD;
 
   /* End of SystemInitialize for SubSystem: '<Root>/Blink_Generator ' */
 
   /* SystemInitialize for Enabled SubSystem: '<Root>/Blink_Generator 1' */
-
   /* SystemInitialize for Chart: '<S2>/Chart' */
-  bcm_Chart_Init(&bcm_DW.sf_Chart_f);
+  bcm_DW.temporalCounter_i1 = 0U;
+  bcm_DW.is_active_c1_bcm = 0U;
+  bcm_DW.is_c1_bcm = bcm_IN_NO_ACTIVE_CHILD;
 
   /* End of SystemInitialize for SubSystem: '<Root>/Blink_Generator 1' */
 }
