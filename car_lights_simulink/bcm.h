@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.27
+ * Model version                  : 7.38
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Mon Jul 26 03:17:42 2021
+ * C/C++ source code generated on : Wed Jul 28 02:39:46 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -87,12 +87,6 @@ extern void bcm_terminate(void);
 extern RT_MODEL_bcm_T *const bcm_M;
 
 /*-
- * These blocks were eliminated from the model due to optimizations:
- *
- * Block '<Root>/Constant5' : Unused code path elimination
- */
-
-/*-
  * The generated code includes comments that allow you to trace directly
  * back to the appropriate location in the model.  The basic format
  * is <system>/block_name, where system is the system number (uniquely
@@ -110,8 +104,15 @@ extern RT_MODEL_bcm_T *const bcm_M;
  * '<S1>'   : 'bcm/Blink_Generator '
  * '<S2>'   : 'bcm/Blink_Generator 1'
  * '<S3>'   : 'bcm/Compare To Constant1'
- * '<S4>'   : 'bcm/Blink_Generator /Chart'
- * '<S5>'   : 'bcm/Blink_Generator 1/Chart'
+ * '<S4>'   : 'bcm/Enabled Subsystem1'
+ * '<S5>'   : 'bcm/Blink_Generator /Chart'
+ * '<S6>'   : 'bcm/Blink_Generator 1/Chart'
+ * '<S7>'   : 'bcm/Enabled Subsystem1/If Action Subsystem'
+ * '<S8>'   : 'bcm/Enabled Subsystem1/If Action Subsystem1'
+ * '<S9>'   : 'bcm/Enabled Subsystem1/If Action Subsystem2'
+ * '<S10>'  : 'bcm/Enabled Subsystem1/If Action Subsystem3'
+ * '<S11>'  : 'bcm/Enabled Subsystem1/If Action Subsystem4'
+ * '<S12>'  : 'bcm/Enabled Subsystem1/If Action Subsystem5'
  */
 #endif                                 /* RTW_HEADER_bcm_h_ */
 

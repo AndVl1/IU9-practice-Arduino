@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.1
+ * Model version                  : 7.38
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Mon Jul 19 03:53:37 2021
+ * C/C++ source code generated on : Wed Jul 28 02:39:46 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)

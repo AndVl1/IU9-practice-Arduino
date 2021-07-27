@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.27
+ * Model version                  : 7.38
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Mon Jul 26 03:17:42 2021
+ * C/C++ source code generated on : Wed Jul 28 02:39:46 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -38,6 +38,7 @@ void bcm_step(void)
 {
   uint8_T rtb_Switch3;
   boolean_T rtb_Compare;
+  boolean_T rtb_Merge1;
 
   /* RelationalOperator: '<S3>/Compare' incorporates:
    *  Constant: '<S3>/Constant'
@@ -75,11 +76,40 @@ void bcm_step(void)
    */
   bcm_Y.stop_LED = !rtb_Compare;
 
-  /* Logic: '<Root>/Logical Operator' incorporates:
+  /* Outputs for Enabled SubSystem: '<Root>/Enabled Subsystem1' incorporates:
+   *  EnablePort: '<S4>/Enable'
+   */
+  /* Outputs for IfAction SubSystem: '<S4>/If Action Subsystem3' incorporates:
+   *  ActionPort: '<S10>/Action Port'
+   */
+  /* Outputs for IfAction SubSystem: '<S4>/If Action Subsystem2' incorporates:
+   *  ActionPort: '<S9>/Action Port'
+   */
+  /* If: '<S4>/If1' incorporates:
    *  Inport: '<Root>/emergence_switch1'
    *  Inport: '<Root>/turn_left_switch'
+   *  Inport: '<S10>/In1'
+   *  Inport: '<S9>/In1'
    */
-  rtb_Compare = (bcm_U.turn_left_switch || bcm_U.emergence_switch1);
+  rtb_Merge1 = ((!bcm_U.emergence_switch1) && bcm_U.turn_left_switch);
+
+  /* End of Outputs for SubSystem: '<S4>/If Action Subsystem2' */
+  /* End of Outputs for SubSystem: '<S4>/If Action Subsystem3' */
+
+  /* Logic: '<S4>/Logical Operator' incorporates:
+   *  Inport: '<Root>/emergence_switch1'
+   */
+  rtb_Compare = (bcm_U.emergence_switch1 || rtb_Merge1);
+
+  /* If: '<S4>/If2' incorporates:
+   *  Inport: '<Root>/emergence_switch1'
+   *  Inport: '<Root>/turn_right_switch'
+   *  Logic: '<S4>/Logical Operator1'
+   */
+  rtb_Merge1 = (bcm_U.emergence_switch1 || ((!rtb_Merge1) &&
+    bcm_U.turn_right_switch));
+
+  /* End of Outputs for SubSystem: '<Root>/Enabled Subsystem1' */
 
   /* Outputs for Enabled SubSystem: '<Root>/Blink_Generator ' incorporates:
    *  EnablePort: '<S1>/Enable'
@@ -127,12 +157,6 @@ void bcm_step(void)
 
   /* End of Switch: '<Root>/Switch1' */
 
-  /* Logic: '<Root>/Logical Operator1' incorporates:
-   *  Inport: '<Root>/emergence_switch1'
-   *  Inport: '<Root>/turn_right_switch'
-   */
-  rtb_Compare = (bcm_U.emergence_switch1 || bcm_U.turn_right_switch);
-
   /* Outputs for Enabled SubSystem: '<Root>/Blink_Generator 1' incorporates:
    *  EnablePort: '<S2>/Enable'
    */
@@ -148,7 +172,7 @@ void bcm_step(void)
     rtb_Switch3 = 1U;
   } else if (bcm_DW.is_c1_bcm == bcm_IN_StateHigh) {
     rtb_Switch3 = 1U;
-    if (rtb_Compare && (bcm_DW.temporalCounter_i1 >= 50)) {
+    if (rtb_Merge1 && (bcm_DW.temporalCounter_i1 >= 50)) {
       bcm_DW.is_c1_bcm = bcm_IN_StateLow;
       bcm_DW.temporalCounter_i1 = 0U;
       rtb_Switch3 = 0U;
@@ -167,7 +191,7 @@ void bcm_step(void)
   /* End of Outputs for SubSystem: '<Root>/Blink_Generator 1' */
 
   /* Switch: '<Root>/Switch3' */
-  if (rtb_Compare) {
+  if (rtb_Merge1) {
     /* Outport: '<Root>/turning_LED_2' */
     bcm_Y.turning_LED_2 = rtb_Switch3;
   } else {
