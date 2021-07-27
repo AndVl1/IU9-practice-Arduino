@@ -1,4 +1,5 @@
 #include "GyverTimers.h"
+#include <avr/eeprom.h>
 
 #define RUNNING_LIGHTS_SWITCH_PIN_INDEX 13
 #define EMERGENCE_SWITCH_PIN_INDEX 4
@@ -10,7 +11,7 @@
 #define TURN_SIGNAL_LED_LEFT 12
 #define TURN_SIGNAL_LED_RIGHT 8
 
-#define STOP_LED 11
+#define STOP_LED 7
 
 #define RIGHT_TURN_SWITCH_INDEX 2
 #define LEFT_TURN_SWITCH_INDEX 3
@@ -23,9 +24,19 @@
 #define ON 0
 #define OFF 1
 
+#define IO_ENABLED LOW
+#define IO_DISABLED HIGH
+
 #define TURNING_OFF 0
 #define TURN_LEFT 1
 #define TURN_RIGHT 2
+
+#define EEPROM_ADDR 10
+
+#define STOP_PEDAL_STIFFNESS_STEP 50
+
+void turning_isr();
+uint32_t get_percentage(int value, int percentage);
 
 unsigned long previous_millis = 0;
 
@@ -40,8 +51,11 @@ int emergence_state = OFF;
 byte timer_10ms_event = 0;
 byte turning_state = TURNING_OFF;
 
-void turning_isr();
-int get_percentage(int value, int percentage);
+char inChar;
+
+uint32_t eeprom_addr = EEPROM_ADDR;
+
+uint32_t stop_lower_limit = get_percentage(1023, 30);
 
 void setup() {
   // put your setup code here, to run once:
@@ -58,6 +72,8 @@ void setup() {
   
   pinMode(TURN_SIGNAL_LED_RIGHT, OUTPUT);
   pinMode(TURN_SIGNAL_LED_LEFT, OUTPUT);
+  
+  eeprom_write_dword(&eeprom_addr, stop_lower_limit);
 
   attachInterrupt(
     0, turning_isr, CHANGE
@@ -71,13 +87,45 @@ void setup() {
 }
 
 void loop() {
+
+  stop_lower_limit = eeprom_read_dword(&eeprom_addr);
+  
+  if (Serial.available() > 0)
+  {
+    inChar = Serial.read();
+    if (inChar == '-')
+    {
+      if (stop_lower_limit < STOP_PEDAL_STIFFNESS_STEP)
+      {
+        stop_lower_limit = 0;
+      }
+      else
+      {
+        stop_lower_limit -= STOP_PEDAL_STIFFNESS_STEP;
+      }
+    }
+    else if (inChar == '+')
+    {
+      if (stop_lower_limit > 1023 - STOP_PEDAL_STIFFNESS_STEP)
+      {
+        stop_lower_limit = 1023;
+      }
+      else
+      {
+        stop_lower_limit += STOP_PEDAL_STIFFNESS_STEP;
+      }
+    }
+    eeprom_update_dword(&eeprom_addr, stop_lower_limit);
+    Serial.println(stop_lower_limit);
+  }
+
   run_l_switch_state = digitalRead(RUNNING_LIGHTS_SWITCH_PIN_INDEX);
   emergence_switch_state = digitalRead(EMERGENCE_SWITCH_PIN_INDEX);
   stop_input_value = analogRead(ANALOG_INPUT_PIN_INDEX);
 
   unsigned long current_millis = millis();
 
-  if (get_percentage(1023, 30) < stop_input_value) 
+  if (stop_lower_limit < stop_input_value) 
   {
     analogWrite(STOP_LED, 0);
     
@@ -88,7 +136,7 @@ void loop() {
   {
     analogWrite(STOP_LED, 255);
 
-    if (run_l_switch_state == LOW)
+    if (run_l_switch_state == IO_ENABLED)
     {
       analogWrite(RUNNING_LIGHTS_LED_LEFT, 255);
       analogWrite(RUNNING_LIGHTS_LED_RIGHT, 255);
@@ -100,7 +148,7 @@ void loop() {
     }
   }
 
-  if (emergence_switch_state == LOW)
+  if (emergence_switch_state == IO_ENABLED)
   {
     if (current_millis - previous_millis >= INTERVAL)
     {
@@ -125,7 +173,7 @@ void loop() {
 
       switch(turning_state) {
         case TURN_LEFT:
-          digitalWrite(TURN_SIGNAL_LED_RIGHT, HIGH);
+          digitalWrite(TURN_SIGNAL_LED_RIGHT, IO_DISABLED);
           if (current_millis - previous_millis >= INTERVAL)
           {
             previous_millis = current_millis;
@@ -141,7 +189,7 @@ void loop() {
           digitalWrite(TURN_SIGNAL_LED_LEFT, turn_left_state);
           break;
         case TURN_RIGHT:
-          digitalWrite(TURN_SIGNAL_LED_LEFT, HIGH);
+          digitalWrite(TURN_SIGNAL_LED_LEFT, IO_DISABLED);
           if (current_millis - previous_millis >= INTERVAL)
           {
             previous_millis = current_millis;
@@ -157,8 +205,8 @@ void loop() {
           digitalWrite(TURN_SIGNAL_LED_RIGHT, turn_right_state);
           break;
         default:
-          digitalWrite(TURN_SIGNAL_LED_LEFT, HIGH);
-          digitalWrite(TURN_SIGNAL_LED_RIGHT, HIGH);
+          digitalWrite(TURN_SIGNAL_LED_LEFT, IO_DISABLED);
+          digitalWrite(TURN_SIGNAL_LED_RIGHT, IO_DISABLED);
           emergence_state = OFF;
           turn_right_state = OFF;
           turn_left_state = OFF;
@@ -173,11 +221,11 @@ void turning_isr()
   turning_right_input_value = digitalRead(RIGHT_TURN_SWITCH_INDEX);
   turning_left_input_value = digitalRead(LEFT_TURN_SWITCH_INDEX);
 
-  if (turning_right_input_value == LOW)
+  if (turning_right_input_value == IO_ENABLED)
   {
     turning_state = TURN_RIGHT;
   }
-  else if (turning_left_input_value == LOW)
+  else if (turning_left_input_value == IO_ENABLED)
   {
     turning_state = TURN_LEFT;
   }
@@ -188,7 +236,7 @@ void turning_isr()
   
   Serial.print("Right ");
   Serial.println(turning_right_input_value);
-  Serial.print("Left ");
+  Serial.print("Left " + turning_left_input_value);
   Serial.println(turning_left_input_value);
 }
 
@@ -202,7 +250,7 @@ ISR(TIMER1_A)
   timer_10ms();
 }
 
-int get_percentage(int value, int percentage)
+uint32_t get_percentage(int value, int percentage)
 {
-  return value * percentage / 100;
+  return (uint32_t) value * percentage / 100;
 }
