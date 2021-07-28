@@ -24,17 +24,25 @@ class LedApp(QtWidgets.QMainWindow, design.Ui_Form):
         except Exception as e:
             print(e)
 
-    def send(self):
+
+    def get_stop_min_value(self):
         if self.realport:
-            self.realport.write(b'b')
+            self.realport.write(b'r')
+            print(self.realport.readline())
+
 
     def set_stronger(self):
         if self.realport:
             self.realport.write(b'+')
+            self.realport.write(b'r')
+            self.progressBar.setValue(int(int(self.realport.readline()) / 1023 * 100))
+        
 
     def set_weaker(self):
         if self.realport:
             self.realport.write(b'-')
+            self.realport.write(b'r')
+            self.progressBar.setValue(int(int(self.realport.readline()) / 1023 * 100))
 
 
 def main():

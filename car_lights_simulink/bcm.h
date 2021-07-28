@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'bcm'.
  *
- * Model version                  : 7.38
+ * Model version                  : 7.42
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Wed Jul 28 02:39:46 2021
+ * C/C++ source code generated on : Thu Jul 29 02:11:40 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -38,12 +38,9 @@ typedef struct tag_RTM_bcm_T RT_MODEL_bcm_T;
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  uint8_T is_active_c1_bcm;            /* '<S2>/Chart' */
-  uint8_T is_c1_bcm;                   /* '<S2>/Chart' */
-  uint8_T temporalCounter_i1;          /* '<S2>/Chart' */
-  uint8_T is_active_c3_bcm;            /* '<S1>/Chart' */
-  uint8_T is_c3_bcm;                   /* '<S1>/Chart' */
-  uint8_T temporalCounter_i1_j;        /* '<S1>/Chart' */
+  uint8_T is_active_c2_bcm;            /* '<S1>/Chart' */
+  uint8_T is_c2_bcm;                   /* '<S1>/Chart' */
+  uint8_T temporalCounter_i1;          /* '<S1>/Chart' */
 } DW_bcm_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -53,6 +50,7 @@ typedef struct {
   uint16_T stop_signal_input;          /* '<Root>/stop_signal_input' */
   boolean_T turn_left_switch;          /* '<Root>/turn_left_switch' */
   boolean_T turn_right_switch;         /* '<Root>/turn_right_switch' */
+  uint16_T stop_min_value;             /* '<Root>/stop_min_value' */
 } ExtU_bcm_T;
 
 /* External outputs (root outports fed by signals with default storage) */
@@ -101,18 +99,15 @@ extern RT_MODEL_bcm_T *const bcm_M;
  * Here is the system hierarchy for this model
  *
  * '<Root>' : 'bcm'
- * '<S1>'   : 'bcm/Blink_Generator '
- * '<S2>'   : 'bcm/Blink_Generator 1'
- * '<S3>'   : 'bcm/Compare To Constant1'
- * '<S4>'   : 'bcm/Enabled Subsystem1'
- * '<S5>'   : 'bcm/Blink_Generator /Chart'
- * '<S6>'   : 'bcm/Blink_Generator 1/Chart'
- * '<S7>'   : 'bcm/Enabled Subsystem1/If Action Subsystem'
- * '<S8>'   : 'bcm/Enabled Subsystem1/If Action Subsystem1'
- * '<S9>'   : 'bcm/Enabled Subsystem1/If Action Subsystem2'
- * '<S10>'  : 'bcm/Enabled Subsystem1/If Action Subsystem3'
- * '<S11>'  : 'bcm/Enabled Subsystem1/If Action Subsystem4'
- * '<S12>'  : 'bcm/Enabled Subsystem1/If Action Subsystem5'
+ * '<S1>'   : 'bcm/Blink_Generator 2'
+ * '<S2>'   : 'bcm/Enabled Subsystem1'
+ * '<S3>'   : 'bcm/Blink_Generator 2/Chart'
+ * '<S4>'   : 'bcm/Enabled Subsystem1/If Action Subsystem'
+ * '<S5>'   : 'bcm/Enabled Subsystem1/If Action Subsystem1'
+ * '<S6>'   : 'bcm/Enabled Subsystem1/If Action Subsystem2'
+ * '<S7>'   : 'bcm/Enabled Subsystem1/If Action Subsystem3'
+ * '<S8>'   : 'bcm/Enabled Subsystem1/If Action Subsystem4'
+ * '<S9>'   : 'bcm/Enabled Subsystem1/If Action Subsystem5'
  */
 #endif                                 /* RTW_HEADER_bcm_h_ */
 

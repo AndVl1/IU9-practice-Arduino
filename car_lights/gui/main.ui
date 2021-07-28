@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Управление подсветкой</string>
+   <string>Управление &quot;силой нажатия&quot;</string>
   </property>
   <widget class="QComboBox" name="Port">
    <property name="geometry">
@@ -85,7 +85,7 @@
   <widget class="QPushButton" name="Weaker">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>20</x>
      <y>170</y>
      <width>111</width>
      <height>81</height>
@@ -98,7 +98,7 @@
   <widget class="QPushButton" name="Stronger">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>280</x>
      <y>170</y>
      <width>111</width>
      <height>81</height>
@@ -106,6 +106,19 @@
    </property>
    <property name="text">
     <string>Сильнее</string>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>220</y>
+     <width>118</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
    </property>
   </widget>
  </widget>

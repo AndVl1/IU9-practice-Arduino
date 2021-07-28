@@ -37,18 +37,22 @@ class Ui_Form(object):
         self.ConnectButton.setGeometry(QtCore.QRect(270, 80, 121, 71))
         self.ConnectButton.setObjectName("ConnectButton")
         self.Weaker = QtWidgets.QPushButton(Form)
-        self.Weaker.setGeometry(QtCore.QRect(70, 170, 111, 81))
+        self.Weaker.setGeometry(QtCore.QRect(20, 170, 111, 81))
         self.Weaker.setObjectName("Weaker")
         self.Stronger = QtWidgets.QPushButton(Form)
-        self.Stronger.setGeometry(QtCore.QRect(230, 170, 111, 81))
+        self.Stronger.setGeometry(QtCore.QRect(280, 170, 111, 81))
         self.Stronger.setObjectName("Stronger")
+        self.progressBar = QtWidgets.QProgressBar(Form)
+        self.progressBar.setGeometry(QtCore.QRect(150, 220, 118, 23))
+        self.progressBar.setProperty("value", 24)
+        self.progressBar.setObjectName("progressBar")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Управление подсветкой"))
+        Form.setWindowTitle(_translate("Form", "Управление \"силой нажатия\""))
         self.label.setText(_translate("Form", "Порт"))
         self.label_2.setText(_translate("Form", "Скорость"))
         self.ConnectButton.setText(_translate("Form", "Подключиться"))
