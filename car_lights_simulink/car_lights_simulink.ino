@@ -84,6 +84,7 @@ void loop() {
 
     if (Serial.available() > 0)
     {
+      stop_lower_limit = eeprom_read_dword(&eeprom_addr);
       inChar = Serial.read();
       if (inChar == '-')
       {
