@@ -5,7 +5,7 @@
  *
  * Model version                  : 7.42
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Thu Jul 29 02:11:40 2021
+ * C/C++ source code generated on : Fri Jul 30 01:55:50 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -38,9 +38,9 @@ typedef struct tag_RTM_bcm_T RT_MODEL_bcm_T;
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
+  uint16_T temporalCounter_i1;         /* '<S1>/Chart' */
   uint8_T is_active_c2_bcm;            /* '<S1>/Chart' */
   uint8_T is_c2_bcm;                   /* '<S1>/Chart' */
-  uint8_T temporalCounter_i1;          /* '<S1>/Chart' */
 } DW_bcm_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -51,6 +51,8 @@ typedef struct {
   boolean_T turn_left_switch;          /* '<Root>/turn_left_switch' */
   boolean_T turn_right_switch;         /* '<Root>/turn_right_switch' */
   uint16_T stop_min_value;             /* '<Root>/stop_min_value' */
+  uint16_T intensivity;                /* '<Root>/intensivity' */
+  uint8_T running_intensivity;         /* '<Root>/running_intensivity' */
 } ExtU_bcm_T;
 
 /* External outputs (root outports fed by signals with default storage) */

@@ -29,9 +29,12 @@
 #define TURN_LEFT 1
 #define TURN_RIGHT 2
 
-#define EEPROM_ADDR 10
+#define EEPROM_ADDR_STOP_MIN 10
+#define EEPROM_ADDR_BLINK_INT 5
+#define EEPROM_ADDR_RUNNING_BRIGHT 15
 
 #define STOP_PEDAL_STIFFNESS_STEP 50
+#define BRIGHTNESS_STEP_SIZE 11 // 2950 / 255 ~~ 11 || 50 - 3000
 
 unsigned long previous_millis = 0;
 
@@ -46,8 +49,12 @@ int emergence_state = OFF;
 byte timer_10ms_event = 0;
 byte turning_state = TURNING_OFF;
 
-uint32_t eeprom_addr = EEPROM_ADDR;
-uint32_t stop_lower_limit = 300;
+uint32_t eeprom_addr_stop_min = EEPROM_ADDR_STOP_MIN; 
+uint8_t eeprom_addr_blink_int = EEPROM_ADDR_BLINK_INT;
+uint8_t eeprom_addr_running_br = EEPROM_ADDR_RUNNING_BRIGHT; 
+uint32_t stop_lower_limit = 300; // dword
+uint8_t running_brightness = 70; // byte
+uint8_t blink_period = 50; // byte
 char inChar;
 
 
@@ -71,7 +78,9 @@ void setup() {
 
   bcm_initialize();
 
-  eeprom_write_dword(&eeprom_addr, stop_lower_limit);
+  eeprom_write_dword(&eeprom_addr_stop_min, stop_lower_limit);
+  eeprom_write_byte(&eeprom_addr_blink_int, blink_period);
+  eeprom_write_byte(&eeprom_addr_running_br, running_brightness);
 
   Serial.begin(115200, SERIAL_8N1);
 }
@@ -84,36 +93,28 @@ void loop() {
 
     if (Serial.available() > 0)
     {
-      stop_lower_limit = eeprom_read_dword(&eeprom_addr);
+      // R - running brightness
+      // B - blinking rate
+      // S - stop min value
+      stop_lower_limit = eeprom_read_dword(&eeprom_addr_stop_min);
       inChar = Serial.read();
-      if (inChar == '-')
+      if (inChar == 'S')
       {
-        if (stop_lower_limit < STOP_PEDAL_STIFFNESS_STEP)
-        {
-          stop_lower_limit = 0;
-        }
-        else
-        {
-          stop_lower_limit -= STOP_PEDAL_STIFFNESS_STEP;
-        }
+        stop_lower_limit = Serial.parseInt();
       }
-      else if (inChar == '+')
+      else if (inChar == 'B')
       {
-        if (stop_lower_limit > 1023 - STOP_PEDAL_STIFFNESS_STEP)
-        {
-          stop_lower_limit = 1023;
-        }
-        else
-        {
-          stop_lower_limit += STOP_PEDAL_STIFFNESS_STEP;
-        }
+        blink_period = Serial.parseInt();
+        Serial.println(blink_period);
       }
-      else if (inChar == 'r') // read
+      else if (inChar == 'R') 
       {
-        Serial.println(eeprom_read_dword(&eeprom_addr));
+        running_brightness = Serial.parseInt();
       }
       
-      eeprom_update_dword(&eeprom_addr, stop_lower_limit);
+      eeprom_update_dword(&eeprom_addr_stop_min, stop_lower_limit);
+      eeprom_update_byte(&eeprom_addr_blink_int, blink_period);
+      eeprom_update_byte(&eeprom_addr_running_br, running_brightness);
     }
     
     // inputs
@@ -122,7 +123,10 @@ void loop() {
     bcm_U.turn_left_switch = !digitalRead(LEFT_TURN_SWITCH_INDEX);
     bcm_U.turn_right_switch = !digitalRead(RIGHT_TURN_SWITCH_INDEX);
     bcm_U.stop_signal_input = analogRead(ANALOG_INPUT_PIN_INDEX);
-    bcm_U.stop_min_value = eeprom_read_dword(&eeprom_addr);
+    bcm_U.stop_min_value = eeprom_read_dword(&eeprom_addr_stop_min);
+    bcm_U.intensivity = 5 + eeprom_read_byte(&eeprom_addr_blink_int) * 1.132;
+    //magic number :(
+    bcm_U.running_intensivity = 255 - eeprom_read_byte(&eeprom_addr_running_br);
     
     bcm_step();
 

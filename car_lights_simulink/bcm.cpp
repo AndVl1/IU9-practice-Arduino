@@ -5,7 +5,7 @@
  *
  * Model version                  : 7.42
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Thu Jul 29 02:11:40 2021
+ * C/C++ source code generated on : Fri Jul 30 01:55:50 2021
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR (8-bit)
@@ -56,9 +56,9 @@ void bcm_step(void)
     rtb_Switch3 = 0U;
   } else if (bcm_U.running_switch) {
     /* Switch: '<Root>/Switch' incorporates:
-     *  Constant: '<Root>/Constant'
+     *  Inport: '<Root>/running_intensivity'
      */
-    rtb_Switch3 = 180U;
+    rtb_Switch3 = bcm_U.running_intensivity;
   } else {
     rtb_Switch3 = MAX_uint8_T;
   }
@@ -115,9 +115,10 @@ void bcm_step(void)
    *  EnablePort: '<S1>/Enable'
    */
   /* Chart: '<S1>/Chart' incorporates:
+   *  Inport: '<Root>/intensivity'
    *  Logic: '<Root>/Logical Operator'
    */
-  if (bcm_DW.temporalCounter_i1 < 63U) {
+  if (bcm_DW.temporalCounter_i1 < MAX_uint16_T) {
     bcm_DW.temporalCounter_i1++;
   }
 
@@ -129,7 +130,7 @@ void bcm_step(void)
   } else if (bcm_DW.is_c2_bcm == bcm_IN_StateHigh) {
     rtb_Switch3 = 1U;
     if ((rtb_RelationalOperator || rtb_Merge1) && (bcm_DW.temporalCounter_i1 >=
-         50)) {
+         bcm_U.intensivity)) {
       bcm_DW.is_c2_bcm = bcm_IN_StateLow;
       bcm_DW.temporalCounter_i1 = 0U;
       rtb_Switch3 = 0U;
@@ -137,7 +138,7 @@ void bcm_step(void)
   } else {
     /* case IN_StateLow: */
     rtb_Switch3 = 0U;
-    if (bcm_DW.temporalCounter_i1 >= 50) {
+    if (bcm_DW.temporalCounter_i1 >= bcm_U.intensivity) {
       bcm_DW.is_c2_bcm = bcm_IN_StateHigh;
       bcm_DW.temporalCounter_i1 = 0U;
       rtb_Switch3 = 1U;

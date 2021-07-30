@@ -9,20 +9,37 @@ class LedApp(QtWidgets.QMainWindow, design.Ui_Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.Port.addItems(serial_ports())
-        self.Speed.addItems(speeds)
+        self.port.addItems(serial_ports())
+        self.speed.addItems(speeds)
         self.realport = None
-        self.ConnectButton.clicked.connect(self.connect)
-        self.Stronger.clicked.connect(self.set_stronger)
-        self.Weaker.clicked.connect(self.set_weaker)
+        self.connectButton.clicked.connect(self.connect)
+        self.stopMinValue.valueChanged.connect(self.stop_value_change)
+        self.runningBrightness.valueChanged.connect(self.brighntess_value_change)
+        self.orangeBlinking.valueChanged.connect(self.blink_value_change)
+
 
     def connect(self):
         try:
-            self.realport = serial.Serial(self.Port.currentText(),int(self.Speed.currentText()))
-            self.ConnectButton.setStyleSheet("background-color: green")
-            self.ConnectButton.setText('Подключено')
+            self.realport = serial.Serial(self.port.currentText(),int(self.speed.currentText()))
+            self.connectButton.setStyleSheet("background-color: green")
+            self.connectButton.setText('Подключено')
         except Exception as e:
             print(e)
+
+
+    def stop_value_change(self):
+        if self.realport:
+            self.realport.write(str('S'+str(self.stopMinValue.value())).encode())
+
+
+    def blink_value_change(self):
+        if self.realport:
+            self.realport.write(str('B'+str(self.orangeBlinking.value())).encode())
+
+
+    def brighntess_value_change(self):
+        if self.realport:
+            self.realport.write(str('R'+str(self.runningBrightness.value())).encode())
 
 
     def get_stop_min_value(self):

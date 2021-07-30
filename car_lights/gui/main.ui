@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>421</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Управление &quot;силой нажатия&quot;</string>
+   <string>Управление переменными значениями</string>
   </property>
-  <widget class="QComboBox" name="Port">
+  <widget class="QComboBox" name="port">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="Speed">
+  <widget class="QComboBox" name="speed">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -69,7 +69,7 @@
     <string>Скорость</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="ConnectButton">
+  <widget class="QPushButton" name="connectButton">
    <property name="geometry">
     <rect>
      <x>270</x>
@@ -82,43 +82,142 @@
     <string>Подключиться</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="Weaker">
+  <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>170</y>
-     <width>111</width>
-     <height>81</height>
+     <x>50</x>
+     <y>150</y>
+     <width>321</width>
+     <height>21</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>17</pointsize>
+    </font>
    </property>
    <property name="text">
-    <string>Слабее</string>
+    <string>Мин. сила нажатия тормоза (1 - 1023)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="Stronger">
+  <widget class="QSpinBox" name="stopMinValue">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>170</y>
-     <width>111</width>
-     <height>81</height>
+     <x>120</x>
+     <y>180</y>
+     <width>171</width>
+     <height>51</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Сильнее</string>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
-  </widget>
-  <widget class="QProgressBar" name="progressBar">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>220</y>
-     <width>118</width>
-     <height>23</height>
-    </rect>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>1023</number>
    </property>
    <property name="value">
-    <number>24</number>
+    <number>300</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="runningBrightness">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>270</y>
+     <width>171</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="minimum">
+    <number>0</number>
+   </property>
+   <property name="maximum">
+    <number>255</number>
+   </property>
+   <property name="value">
+    <number>70</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>240</y>
+     <width>321</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>17</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Яркость ходовых огней (0-255)</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="orangeBlinking">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>370</y>
+     <width>171</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="minimum">
+    <number>0</number>
+   </property>
+   <property name="maximum">
+    <number>255</number>
+   </property>
+   <property name="value">
+    <number>50</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>320</y>
+     <width>371</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>17</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Частота мигания оранжевых ламп</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>340</y>
+     <width>371</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>17</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>(0 (раз в 5мс) - 255 (раз в 3 секунды))</string>
    </property>
   </widget>
  </widget>
